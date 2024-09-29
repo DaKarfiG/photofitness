@@ -6,7 +6,8 @@ import { Input } from "@/components/ui/input"
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Camera, Plus } from "lucide-react"
-import Link from 'next/link' // Import Link from next/link
+import Link from 'next/link' 
+import { useEffect } from 'react'
 
 // Placeholder data
 const initialFoodItems = [
@@ -17,6 +18,7 @@ const initialFoodItems = [
 export default function NutritionTracker() {
   const [user, setUser] = useState('')
   const [foodItems, setFoodItems] = useState(initialFoodItems)
+  const [bingResponse, setBingResponse] = useState('')
 
   const totalCalories = foodItems.reduce((sum, item) => sum + item.calories, 0)
   const totalCarbs = foodItems.reduce((sum, item) => sum + item.carbs, 0)
@@ -28,6 +30,29 @@ export default function NutritionTracker() {
     const formData = new FormData(e.currentTarget)
     setUser(formData.get('username') as string)
   }
+
+  const sendMessageToBing = async (message: string) => {
+    const response = await fetch('/api/bing-chat', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({ message }),
+    });
+
+    if (!response.ok) {
+      const errorData = await response.json();
+      console.error('Error:', errorData.error);
+      return;
+    }
+
+    const data = await response.json();
+    setBingResponse(data.text);
+  };
+
+  const handleBingChat = () => {
+    sendMessageToBing('What should I eat today?'); // Example message
+  };
 
   return (
     <div className="container mx-auto p-4">
@@ -46,14 +71,11 @@ export default function NutritionTracker() {
       ) : (
         <>
           <h1 className="text-2xl font-bold mb-4">Welcome, {user}!</h1>
-          {/* Links added below the welcome message */}
           <div className="mb-4">
-            <Button>
-              <Link href="/bing-chat" className="text-white-500 mr-4">Chat with a robot diet coach!</Link>
-            </Button>
-            {/* <Button>
-              <Link href="/chat" className="text-white-500 mr-4">Chat with a robot diet coach!</Link>
-            </Button> */}
+            <Button onClick={handleBingChat}>Ask Bing for Food Suggestions</Button>
+          </div>
+          <div className="mt-4">
+            {bingResponse && <p className="text-lg">Bing says: {bingResponse}</p>}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
