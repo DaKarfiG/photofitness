@@ -16,7 +16,7 @@ const Chat = () => {
       const res = await axios.post('/api/chat', { message });
       setResponse(res.data.response);
     } catch (err) {
-      setError('Error fetching response from ChatGPT');
+      setError('Insufficient API credit funds');
       console.error(err); // Log the error for debugging
     }
   };
