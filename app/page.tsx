@@ -49,8 +49,11 @@ export default function NutritionTracker() {
           {/* Links added below the welcome message */}
           <div className="mb-4">
             <Button>
-              <Link href="/chat" className="text-white-500 mr-4">Chat with a robot diet coach!</Link>
+              <Link href="/bing-chat" className="text-white-500 mr-4">Chat with a robot diet coach!</Link>
             </Button>
+            {/* <Button>
+              <Link href="/chat" className="text-white-500 mr-4">Chat with a robot diet coach!</Link>
+            </Button> */}
           </div>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <Card>
